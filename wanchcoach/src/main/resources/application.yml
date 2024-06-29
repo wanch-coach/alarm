@@ -9,7 +9,7 @@ spring:
   cloud:
     config:
       name: application
-      profile: test
+      profile: alarmlocal
 
 encrypt:
   key: ${ENCRYPT-KEY}

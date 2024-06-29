@@ -38,26 +38,35 @@ public class AlarmService {
     private final AlarmQRepository alarmQRepository;
 
     @Scheduled(cron = "0 0/10 * * * *")
-    @Scheduled(cron = "0/10 * * * * *")
     public void drugAlarmCheck() throws IOException {
         log.info("10분마다 시간 조회 실시 -> " + LocalTime.now());
-//        List<DrugAlarm> alarms = alarmQRepository.getNeedDrugAlarm(LocalTime.now());
-        String msg = "~~님 약먹을 시간이에요.";
-        sendMessageTo("cDvxywwvRmn-wIjkLSTKiz:APA91bFJr3Dtp1tpa7wOIzUKvV3akZb6pbBJ8vfUMG8OdrAgN7whFrQt09UDFji9KmQ1LxpAbFC5gWzruccFJLBiyQB60S5DcuKPKoKVz5e2okIUku3L40-EE902-sH54YXEVfupYFnA",
-                "현재 시간",
-                LocalDateTime.now().toString());
+        List<DrugAlarm> alarms = alarmQRepository.getNeedDrugAlarm(LocalTime.now());
+
+        for(DrugAlarm alarm:alarms){
+            sendMessageTo(alarm.deviceToken(),
+                    alarm.name()+"님!",
+                    "약 드실 시간이에요!");
+        }
     }
     @Scheduled(cron = "0 0 8 * * *")
-    public void todayTreatmentCheck() {
+    public void todayTreatmentCheck() throws IOException {
         log.info("당일 예약 조회 -> " + LocalTime.now());
         List<DrugAlarm> alarms = alarmQRepository.getTodayTreatment(LocalDateTime.now());
-        String msg = "~~님 오늘 진료 예약이 있어요.";
+        for(DrugAlarm alarm:alarms){
+            sendMessageTo(alarm.deviceToken(),
+                    alarm.name()+"님!",
+                    "오늘 진료 예약이 있어요! 꼭 방문해야해요!");
+        }
     }
     @Scheduled(cron = "0 0 19 * * *")
-    public void tomorrowTreatmentCheck() {
+    public void tomorrowTreatmentCheck() throws IOException {
         log.info("다음날 진료 예약 조회 -> " + LocalTime.now());
         List<DrugAlarm> alarms = alarmQRepository.getTomorrowTreatment(LocalDateTime.now());
-        String msg = "~~님 내일 진료 예약이 있어요.";
+        for(DrugAlarm alarm:alarms){
+            sendMessageTo(alarm.deviceToken(),
+                    alarm.name()+"님!",
+                    "내일 진료 예약이 있어요! 까먹지마세요!");
+        }
     }
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
