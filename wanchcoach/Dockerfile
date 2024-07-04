@@ -10,4 +10,4 @@ EXPOSE 8082
 ARG ENCRYPT_KEY
 ENV ENCRYPT-KEY $ENCRYPT_KEY
 
-ENTRYPOINT ["java","-Dspring.cloud.config.profile=test","-jar","/wanchcoach.jar"]
+ENTRYPOINT ["java","-Dspring.cloud.config.profile=alarm","-jar","/wanchcoach.jar"]
